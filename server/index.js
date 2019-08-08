@@ -22,6 +22,8 @@ const app = express();
  * texto. A este callback Express lo llama
  * middleware
  */
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 module.exports = app;
