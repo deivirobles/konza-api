@@ -6,10 +6,12 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.use((req, res, next) => {
-  res.status(404);
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode);
   res.json({
-    message: 'Error, Route not found',
+    message,
   });
 });
 
