@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const logger = require('./config/logger');
 
 const app = express();
-app.use(morgan('combined'));
+app.use(morgan('combined', { stream: { write: message => logger.info(message) } }));
 
 // Routes
 app.get('/', (req, res) => {
