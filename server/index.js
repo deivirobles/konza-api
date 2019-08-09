@@ -1,9 +1,11 @@
 const express = require('express');
 
 // Importamos el logger
+const morgan = require('morgan');
 const logger = require('./config/logger');
 
 const app = express();
+app.use(morgan('combined'));
 
 // Routes
 app.get('/', (req, res) => {
