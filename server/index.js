@@ -9,9 +9,9 @@ app.use(requestId);
 app.use(logger.requests);
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/api/tasks', (req, res, next) => {
   res.json({
-    message: 'Hello World!',
+    message: 'GET all tasks',
   });
 });
 
