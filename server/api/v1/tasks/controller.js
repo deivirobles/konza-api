@@ -58,28 +58,32 @@ exports.read = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  const { body = {}, params = {} } = req;
-  const { id } = params;
-  const doc = {
-    ...body,
-    id,
-  };
-  res.json({
-    data: doc,
-    success: true,
-    statusCode: HTTP_STATUS_CODE.OK,
+  const { body = {}, doc } = req;
+  Object.assign(doc, body);
+  doc.save((err, updated) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json({
+        data: updated,
+        success: true,
+        statusCode: HTTP_STATUS_CODE.OK,
+      });
+    }
   });
 };
 
 exports.delete = (req, res, next) => {
-  const { params = {} } = req;
-  const { id } = params;
-  const doc = {
-    id,
-  };
-  res.json({
-    data: doc,
-    success: true,
-    statusCode: HTTP_STATUS_CODE.OK,
+  const { doc } = req;
+  doc.remove((err, deleted) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json({
+        data: deleted,
+        success: true,
+        statusCode: HTTP_STATUS_CODE.OK,
+      });
+    }
   });
 };
