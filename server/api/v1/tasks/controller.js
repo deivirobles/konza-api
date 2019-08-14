@@ -1,23 +1,34 @@
 const HTTP_STATUS_CODE = require('http-status-codes');
 
+const Model = require('./model');
+
 exports.create = (req, res, next) => {
   const { body = {} } = req;
-  const doc = body;
-
-  res.status(HTTP_STATUS_CODE.CREATED);
-  res.json({
-    data: doc,
-    success: true,
-    statusCode: HTTP_STATUS_CODE.CREATED,
+  Model.create(body, (err, doc) => {
+    if (err) {
+      next(err);
+    } else {
+      res.status(HTTP_STATUS_CODE.CREATED);
+      res.json({
+        data: doc,
+        success: true,
+        statusCode: HTTP_STATUS_CODE.CREATED,
+      });
+    }
   });
 };
 
 exports.all = (req, res, next) => {
-  const docs = [];
-  res.json({
-    data: docs,
-    success: true,
-    statusCode: HTTP_STATUS_CODE.OK,
+  Model.find().exec((err, docs) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json({
+        data: docs,
+        success: true,
+        statusCode: HTTP_STATUS_CODE.OK,
+      });
+    }
   });
 };
 
