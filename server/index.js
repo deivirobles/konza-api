@@ -2,12 +2,18 @@ const express = require('express');
 
 // Importamos el logger
 const requestId = require('express-request-id')();
+const bodyParser = require('body-parser');
 const logger = require('./config/logger');
 const api = require('./api/v1');
 
 const app = express();
 app.use(requestId);
 app.use(logger.requests);
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
 
 // Routes
 app.use('/api/v1', api);
