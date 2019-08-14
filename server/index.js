@@ -3,17 +3,14 @@ const express = require('express');
 // Importamos el logger
 const requestId = require('express-request-id')();
 const logger = require('./config/logger');
+const api = require('./api');
 
 const app = express();
 app.use(requestId);
 app.use(logger.requests);
 
 // Routes
-app.route('/api/tasks').get((req, res, next) => {
-  res.json({
-    message: 'GET all tasks',
-  });
-});
+app.use('/api', api);
 
 // No route found handler
 app.use((req, res, next) => {
