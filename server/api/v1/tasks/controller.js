@@ -35,13 +35,22 @@ exports.all = (req, res, next) => {
 exports.read = (req, res, next) => {
   const { params = {} } = req;
   const { id } = params;
-  const doc = {
-    id,
-  };
-  res.json({
-    data: doc,
-    success: true,
-    statusCode: HTTP_STATUS_CODE.OK,
+
+  Model.findById(id).exec((err, doc) => {
+    if (err) {
+      next(err);
+    } else if (doc) {
+      res.json({
+        data: doc,
+        success: true,
+        statusCode: HTTP_STATUS_CODE.OK,
+      });
+    } else {
+      next({
+        message: 'Resource not found',
+        statusCode: HTTP_STATUS_CODE.NOT_FOUND,
+      });
+    }
   });
 };
 
