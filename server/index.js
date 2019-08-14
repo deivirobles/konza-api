@@ -17,30 +17,19 @@ app.get('/', (req, res) => {
 
 // No route found handler
 app.use((req, res, next) => {
-  const message = 'Route not found';
-  const statusCode = 404;
-
-  /*
-   * Utilizamos el logger para guardar un
-   * mensaje de nivel advertencia
-   */
-  logger.warn(message);
-
-  res.status(statusCode);
-  res.json({
-    message,
+  next({
+    message: 'Route not found',
+    statusCode: 404,
+    level: 'warn',
   });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const { message, statusCode = 500, level = 'error' } = err;
+  const log = `${logger.header(req)} ${statusCode} ${message}`;
 
-  /*
-   * Utilizamos el logger para guardar un
-   * mensaje de nivel error
-   */
-  logger.error(message);
+  logger[level](log);
 
   res.status(statusCode);
   res.json({

@@ -8,10 +8,13 @@ const logger = createLogger({
   transports: [new transports.Console()],
 });
 
+// Create Morgan id token
 morgan.token('id', req => req.id);
 
+// Setup request Format
 const requestFormat = ':remote-addr [:date[iso]] :id ":method :url" :status';
 
+// Setup Request Logger with Morgan
 const requests = morgan(requestFormat, {
   stream: {
     write: (message) => {
@@ -22,6 +25,12 @@ const requests = morgan(requestFormat, {
   },
 });
 
+// Attach morgan to logger object
 logger.requests = requests;
+
+logger.header = (req) => {
+  const date = new Date().toString();
+  return `${req.id} [${date}] ${req.id} "${req.method} ${req.originalUrl}"`;
+};
 
 module.exports = logger;
