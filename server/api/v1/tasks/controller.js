@@ -2,6 +2,22 @@ const HTTP_STATUS_CODE = require('http-status-codes');
 
 const Model = require('./model');
 
+exports.id = (req, res, next, id) => {
+  Model.findById(id).exec((err, doc) => {
+    if (err) {
+      next(err);
+    } else if (doc) {
+      req.doc = doc;
+      next();
+    } else {
+      next({
+        message: 'Resource not found',
+        statusCode: HTTP_STATUS_CODE.NOT_FOUND,
+      });
+    }
+  });
+};
+
 exports.create = (req, res, next) => {
   const { body = {} } = req;
   Model.create(body, (err, doc) => {
@@ -33,24 +49,11 @@ exports.all = (req, res, next) => {
 };
 
 exports.read = (req, res, next) => {
-  const { params = {} } = req;
-  const { id } = params;
-
-  Model.findById(id).exec((err, doc) => {
-    if (err) {
-      next(err);
-    } else if (doc) {
-      res.json({
-        data: doc,
-        success: true,
-        statusCode: HTTP_STATUS_CODE.OK,
-      });
-    } else {
-      next({
-        message: 'Resource not found',
-        statusCode: HTTP_STATUS_CODE.NOT_FOUND,
-      });
-    }
+  const { doc } = req;
+  res.json({
+    data: doc,
+    success: true,
+    statusCode: HTTP_STATUS_CODE.OK,
   });
 };
 
