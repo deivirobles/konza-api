@@ -1,13 +1,12 @@
 const express = require('express');
 
 // Importamos el logger
-const morgan = require('morgan');
 const requestId = require('express-request-id')();
 const logger = require('./config/logger');
 
 const app = express();
 app.use(requestId);
-app.use(morgan('combined', { stream: { write: message => logger.info(message) } }));
+app.use(logger.requests);
 
 // Routes
 app.get('/', (req, res) => {

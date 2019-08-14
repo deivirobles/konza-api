@@ -18,6 +18,7 @@
     "express-request-id": "^1.4.1",
     "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
+    "strip-final-newline": "^2.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
