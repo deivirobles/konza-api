@@ -3,14 +3,14 @@ const express = require('express');
 // Importamos el logger
 const requestId = require('express-request-id')();
 const logger = require('./config/logger');
-const api = require('./api');
+const api = require('./api/v1');
 
 const app = express();
 app.use(requestId);
 app.use(logger.requests);
 
 // Routes
-app.use('/api', api);
+app.use('/api/v1', api);
 
 // No route found handler
 app.use((req, res, next) => {
