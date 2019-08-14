@@ -3,6 +3,7 @@ const express = require('express');
 // Importamos el logger
 const requestId = require('express-request-id')();
 const bodyParser = require('body-parser');
+const HTTP_STATUS_CODE = require('http-status-codes');
 const logger = require('./config/logger');
 const api = require('./api/v1');
 
@@ -22,14 +23,14 @@ app.use('/api/v1', api);
 app.use((req, res, next) => {
   next({
     message: 'Route not found',
-    statusCode: 404,
+    statusCode: HTTP_STATUS_CODE.NOT_FOUND,
     level: 'warn',
   });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  const { message, statusCode = 500, level = 'error' } = err;
+  const { message, statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR, level = 'error' } = err;
   const log = `${logger.header(req)} ${statusCode} ${message}`;
 
   logger[level](log);
