@@ -31,14 +31,21 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  const { message, statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR, level = 'error' } = err;
+  const { message, level = 'error' } = err;
+  let { statusCode = HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR } = err;
   const log = `${logger.header(req)} ${statusCode} ${message}`;
+
+  if (err.name === 'ValidationError') {
+    statusCode = HTTP_STATUS_CODE.UNPROCESSABLE_ENTITY;
+  }
 
   logger[level](log);
 
   res.status(statusCode);
   res.json({
+    error: true,
     message,
+    statusCode,
   });
 });
 
