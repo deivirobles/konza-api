@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Routes
+app.use('/api', api);
 app.use('/api/v1', api);
 
 // No route found handler
