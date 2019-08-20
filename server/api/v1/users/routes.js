@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const controller = require('./controller');
+const tasksRouter = require('./../tasks/routes');
 
 /*
  * /api/users/ POST - CREATE
@@ -21,5 +22,7 @@ router
   .get(controller.read)
   .put(controller.update)
   .delete(controller.delete);
+
+router.use('/:userId/tasks', tasksRouter);
 
 module.exports = router;
