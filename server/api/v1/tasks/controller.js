@@ -1,6 +1,7 @@
 const HTTP_STATUS_CODE = require('http-status-codes');
 
-const Model = require('./model');
+const { Model, fields } = require('./model');
+const { paginationParseParams, sortParseParams } = require('./../../../utils');
 
 exports.id = async (req, res, next, id) => {
   try {
@@ -36,12 +37,34 @@ exports.create = async (req, res, next) => {
 };
 
 exports.all = async (req, res, next) => {
+  const { query = {} } = req;
+  const { limit, page, skip } = paginationParseParams(query);
+  const { sortBy, direction } = sortParseParams(query, fields);
+  const sort = {};
+  sort[sortBy] = direction;
   try {
-    const docs = await Model.find().exec();
+    const all = Model.find()
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const count = Model.countDocuments();
+
+    const [docs, total] = await Promise.all([all, count]);
+    const pages = Math.ceil(total / limit);
+
     res.json({
       data: docs,
       success: true,
       statusCode: HTTP_STATUS_CODE.OK,
+      meta: {
+        sortBy,
+        direction,
+        limit,
+        skip,
+        page,
+        pages,
+      },
     });
   } catch (err) {
     next(err);
