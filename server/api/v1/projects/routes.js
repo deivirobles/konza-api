@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const controller = require('./controller');
 const tasksRouter = require('./../tasks/routes');
-const { auth } = require('./../auth');
+const { auth, owner } = require('./../auth');
 
 /*
  * /api/projects/ POST - CREATE
@@ -21,8 +21,8 @@ router
 router
   .route('/:id')
   .get(auth, controller.read)
-  .put(auth, controller.update)
-  .delete(auth, controller.delete);
+  .put(auth, owner, controller.update)
+  .delete(auth, owner, controller.delete);
 
 router.use('/:projectId/tasks', tasksRouter);
 

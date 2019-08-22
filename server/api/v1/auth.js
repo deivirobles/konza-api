@@ -10,7 +10,7 @@ const signToken = (payload, expiresIn = expires) => sign(payload, secret, {
 });
 
 const auth = (req, res, next) => {
-  const { headers = {} } = req;
+  const { headers = '' } = req;
   const { authorization = {} } = headers;
 
   if (authorization) {
@@ -36,7 +36,37 @@ const auth = (req, res, next) => {
   }
 };
 
+const me = (req, res, next) => {
+  const { decoded = {}, doc = {} } = req;
+
+  if (decoded.id === doc.id) {
+    next();
+  } else {
+    next({
+      success: false,
+      message: 'Unauthorized',
+      statusCode: HTTP_STATUS_CODES.UNAUTHORIZED,
+    });
+  }
+};
+
+const owner = (req, res, next) => {
+  const { decoded = {}, doc = {} } = req;
+
+  if (decoded.id === doc.userId) {
+    next();
+  } else {
+    next({
+      success: false,
+      message: 'Unauthorized',
+      statusCode: HTTP_STATUS_CODES.UNAUTHORIZED,
+    });
+  }
+};
+
 module.exports = {
   signToken,
   auth,
+  me,
+  owner,
 };
