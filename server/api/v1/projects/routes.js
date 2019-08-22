@@ -3,6 +3,7 @@ const controller = require('./controller');
 const tasksRouter = require('./../tasks/routes');
 const { auth, owner } = require('./../auth');
 
+const { sanitizers } = require('./model');
 /*
  * /api/projects/ POST - CREATE
  * /api/projects/ GET - READ ALL
@@ -15,14 +16,14 @@ router.param('id', controller.id);
 
 router
   .route('/')
-  .post(auth, controller.create)
+  .post(auth, sanitizers, controller.create)
   .get(auth, controller.all);
 
 router
   .route('/:id')
   .get(auth, controller.read)
   .put(auth, owner, controller.update)
-  .delete(auth, owner, controller.delete);
+  .delete(auth, owner, sanitizers, controller.delete);
 
 router.use('/:projectId/tasks', tasksRouter);
 
